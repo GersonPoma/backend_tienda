@@ -205,10 +205,16 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         """
         Listar todos los usuarios.
 
-        Respuesta: Array de usuarios
+        Respuesta: Array de usuarios paginado
         """
-        usuarios = UsuarioService.listar_usuarios()
-        return Response(usuarios, status=status.HTTP_200_OK)
+        usuarios_data = UsuarioService.listar_usuarios()
+
+        # Aplicar paginación
+        page = self.paginate_queryset(usuarios_data)
+        if page is not None:
+            return self.get_paginated_response(page)
+
+        return Response(usuarios_data, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None):
         """
