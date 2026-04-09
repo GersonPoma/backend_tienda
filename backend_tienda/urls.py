@@ -24,6 +24,9 @@ urlpatterns = [
     path('api/', include('apps_publicas.empresas.urls')),
 
     # API privada (apps_privadas)
-    # Incluye: /api/usuarios/, /api/usuarios/registrar_cliente/, /api/login/
+    # Seguridad: /api/usuarios/, /api/roles/, /api/login/
     path('api/', include('apps_privadas.seguridad.urls')),
+
+    # Inventario: /api/categorias/, /api/productos/, /api/multimedios/
+    path('api/', include('apps_privadas.inventario.urls')),
 ]

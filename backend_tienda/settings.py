@@ -55,9 +55,9 @@ TENANT_APPS = [
     'django.contrib.admin',
     'django.contrib.sessions',
     'apps_privadas.seguridad',
+    'apps_privadas.inventario',
     'rest_framework',
     'rest_framework_simplejwt',
-    # Aquí irán las apps de apps_privadas en el futuro
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
