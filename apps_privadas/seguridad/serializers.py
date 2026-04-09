@@ -28,8 +28,8 @@ class CrearUsuarioSerializer(serializers.Serializer):
     grupo_id = serializers.IntegerField()
 
     def validate_username(self, value):
-        """Validar que username sea único"""
-        if Usuario.objects.filter(username=value).exists():
+        """Validar que username sea único (solo en usuarios activos)"""
+        if Usuario.objects.filter(username=value, is_active=True).exists():
             raise serializers.ValidationError(f"El usuario {value} ya existe")
         return value
 
@@ -51,8 +51,8 @@ class RegistrarClienteSerializer(serializers.Serializer):
     fecha_nacimiento = serializers.DateField()
 
     def validate_username(self, value):
-        """Validar que username sea único"""
-        if Usuario.objects.filter(username=value).exists():
+        """Validar que username sea único (solo en usuarios activos)"""
+        if Usuario.objects.filter(username=value, is_active=True).exists():
             raise serializers.ValidationError(f"El usuario {value} ya existe")
         return value
 
@@ -121,7 +121,19 @@ class RolActualizarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['name', 'permisos_ids']
+        extra_kwargs = {
+            'name': {'validators': []}
+        }
     
+    def validate_name(self, value):
+        """Validar que el nombre no exista en otro rol (excluyendo la instancia actual)"""
+        instance = self.instance
+        if instance and Group.objects.filter(name=value).exclude(id=instance.id).exists():
+            raise serializers.ValidationError(f"Ya existe otro rol con el nombre '{value}'")
+        elif not instance and Group.objects.filter(name=value).exists():
+            raise serializers.ValidationError(f"Ya existe un rol con el nombre '{value}'")
+        return value
+
     def update(self, instance, validated_data):
         permisos = validated_data.pop('permisos_ids', None)
         
