@@ -55,9 +55,9 @@ TENANT_APPS = [
     'django.contrib.admin',
     'django.contrib.sessions',
     'apps_privadas.seguridad',
+    'apps_privadas.inventario',
     'rest_framework',
     'rest_framework_simplejwt',
-    # Aquí irán las apps de apps_privadas en el futuro
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -195,5 +195,10 @@ CORS_ALLOW_ALL_ORIGINS = True  # Solo en desarrollo
 
 # Para producción, cambiar a:
 # CORS_ALLOWED_ORIGINS = env('CORS_ALLOWED_ORIGINS').split(',')
+
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME = env('CLOUDINARY_CLOUD_NAME', default=None)
+CLOUDINARY_API_KEY = env('CLOUDINARY_API_KEY', default=None)
+CLOUDINARY_API_SECRET = env('CLOUDINARY_API_SECRET', default=None)
 
 
