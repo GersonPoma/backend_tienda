@@ -135,6 +135,8 @@ WSGI_APPLICATION = 'backend_tienda.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# backend_tienda/settings.py
+
 DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
@@ -143,6 +145,9 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'),
         'PORT': env('DB_PORT'),
+        'OPTIONS': {
+            'sslmode': 'require',  # ESTA LÍNEA ES OBLIGATORIA PARA NEON
+        }
     }
 }
 
