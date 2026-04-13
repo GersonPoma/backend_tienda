@@ -29,6 +29,14 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
+STATIC_URL = 'static/'
+
+# AGREGA ESTA LÍNEA:
+# Define la carpeta donde se recolectarán los archivos para producción
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# RECOMENDACIÓN: Agrega WhiteNoise para servir estos archivos en el plan gratuito
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.localhost', '*.localhost']
 ALLOWED_HOSTS = [
@@ -99,6 +107,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
