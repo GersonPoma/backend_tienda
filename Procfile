@@ -1,0 +1,1 @@
+web: gunicorn backend_tienda.wsgi:application --bind 0.0.0.0:$PORT
