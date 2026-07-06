@@ -46,8 +46,11 @@ class VentaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Venta
-        fields = ['id', 'tipo', 'estado', 'fecha', 'precio_total', 'usuario', 'usuario_username', 'detalles']
-        read_only_fields = ['id', 'fecha']
+        fields = [
+            'id', 'tipo', 'estado', 'fecha', 'precio_total', 'descuento_fidelizacion',
+            'usuario', 'usuario_username', 'detalles',
+        ]
+        read_only_fields = ['id', 'fecha', 'descuento_fidelizacion']
 
 
 class HistorialCompraDetalleSerializer(serializers.ModelSerializer):
@@ -86,6 +89,7 @@ class HistorialCompraSerializer(serializers.ModelSerializer):
             'tipo',
             'cantidad_productos',
             'productos',
+            'descuento_fidelizacion',
         ]
 
     def get_cantidad_productos(self, obj):

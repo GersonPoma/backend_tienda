@@ -8,6 +8,9 @@ from apps_privadas.venta.serializers.venta import (
     HistorialCompraDetalleSerializer,
     HistorialCompraSerializer,
 )
+from apps_privadas.venta.serializers.configuracion_fidelizacion import (
+    ConfiguracionFidelizacionSerializer,
+)
 
 __all__ = [
     'VentaSerializer',
@@ -18,4 +21,5 @@ __all__ = [
     'DetalleVentaOutputSerializer',
     'HistorialCompraDetalleSerializer',
     'HistorialCompraSerializer',
+    'ConfiguracionFidelizacionSerializer',
 ]

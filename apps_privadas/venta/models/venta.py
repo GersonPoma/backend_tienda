@@ -18,6 +18,7 @@ class Venta(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     fecha = models.DateTimeField(auto_now_add=True)
     precio_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    descuento_fidelizacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

@@ -14,6 +14,10 @@ from apps_privadas.venta.serializers import (
     HistorialCompraSerializer,
 )
 from apps_privadas.ia.services.alertas_service import verificar_stock_post_venta
+from apps_privadas.venta.services.fidelizacion_service import (
+    aplicar_descuento_si_corresponde,
+    obtener_estado_beneficio,
+)
 
 
 class VentaViewSet(BaseViewSet):
@@ -62,6 +66,15 @@ class VentaViewSet(BaseViewSet):
         serializer = HistorialCompraSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='mi-beneficio-fidelizacion',
+        permission_classes=[IsAuthenticated],
+    )
+    def mi_beneficio_fidelizacion(self, request):
+        return Response(obtener_estado_beneficio(request.user), status=status.HTTP_200_OK)
+
     @transaction.atomic
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -109,6 +122,8 @@ class VentaViewSet(BaseViewSet):
         )
         venta.precio_total = total
         venta.save()
+
+        aplicar_descuento_si_corresponde(venta)
 
         return Response(
             self.serializer_class(venta).data,
@@ -203,6 +218,8 @@ class VentaViewSet(BaseViewSet):
             )
             instance.precio_total = total
             instance.save()
+
+        aplicar_descuento_si_corresponde(instance)
 
         return Response(
             self.serializer_class(instance).data,
