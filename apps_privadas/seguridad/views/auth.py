@@ -196,4 +196,3 @@ def cambiar_password(request):
     )
     http_status = status.HTTP_200_OK if resultado['success'] else status.HTTP_400_BAD_REQUEST
     return Response(resultado, status=http_status)
-
