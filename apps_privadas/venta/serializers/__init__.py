@@ -5,6 +5,8 @@ from apps_privadas.venta.serializers.venta import (
     DetalleVentaInputSerializer,
     ActualizarDetalleVentaInputSerializer,
     DetalleVentaOutputSerializer,
+    HistorialCompraDetalleSerializer,
+    HistorialCompraSerializer,
 )
 
 __all__ = [
@@ -14,4 +16,6 @@ __all__ = [
     'DetalleVentaInputSerializer',
     'ActualizarDetalleVentaInputSerializer',
     'DetalleVentaOutputSerializer',
+    'HistorialCompraDetalleSerializer',
+    'HistorialCompraSerializer',
 ]

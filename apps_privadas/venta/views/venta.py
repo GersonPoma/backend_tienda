@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from django.db import transaction
 from apps_privadas.inventario.views.base import BaseViewSet
 from apps_privadas.inventario.models import VarianteProducto
@@ -9,6 +11,7 @@ from apps_privadas.venta.serializers import (
     VentaSerializer,
     CrearVentaSerializer,
     ActualizarVentaSerializer,
+    HistorialCompraSerializer,
 )
 from apps_privadas.ia.services.alertas_service import verificar_stock_post_venta
 
@@ -19,6 +22,45 @@ class VentaViewSet(BaseViewSet):
     serializer_class = VentaSerializer
     crear_serializer_class = CrearVentaSerializer
     actualizar_serializer_class = ActualizarVentaSerializer
+
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path='historial-cliente',
+        permission_classes=[IsAuthenticated],
+    )
+    def historial_cliente(self, request):
+        usuario_id = request.user.id
+        usuario_id_param = request.query_params.get('usuario_id')
+
+        if usuario_id_param and (request.user.is_staff or request.user.is_superuser):
+            usuario_id = usuario_id_param
+
+        queryset = (
+            Venta.objects
+            .filter(usuario_id=usuario_id)
+            .prefetch_related('detalles__variante_producto__producto')
+            .order_by('-fecha')
+        )
+
+        estado = request.query_params.get('estado')
+        fecha_desde = request.query_params.get('fecha_desde')
+        fecha_hasta = request.query_params.get('fecha_hasta')
+
+        if estado:
+            queryset = queryset.filter(estado=estado)
+        if fecha_desde:
+            queryset = queryset.filter(fecha__date__gte=fecha_desde)
+        if fecha_hasta:
+            queryset = queryset.filter(fecha__date__lte=fecha_hasta)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = HistorialCompraSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = HistorialCompraSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):

@@ -50,6 +50,48 @@ class VentaSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'fecha']
 
 
+class HistorialCompraDetalleSerializer(serializers.ModelSerializer):
+    producto_id = serializers.IntegerField(source='variante_producto.producto.id', read_only=True)
+    producto_nombre = serializers.CharField(source='variante_producto.producto.nombre', read_only=True)
+    variante_id = serializers.IntegerField(source='variante_producto.id', read_only=True)
+    variante_sku = serializers.CharField(source='variante_producto.sku', read_only=True)
+
+    class Meta:
+        model = DetalleVenta
+        fields = [
+            'id',
+            'producto_id',
+            'producto_nombre',
+            'variante_id',
+            'variante_sku',
+            'cantidad',
+            'precio_unitario',
+            'precio_subtotal',
+        ]
+
+
+class HistorialCompraSerializer(serializers.ModelSerializer):
+    compra_id = serializers.IntegerField(source='id', read_only=True)
+    total = serializers.DecimalField(source='precio_total', max_digits=10, decimal_places=2, read_only=True)
+    productos = HistorialCompraDetalleSerializer(source='detalles', many=True, read_only=True)
+    cantidad_productos = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Venta
+        fields = [
+            'compra_id',
+            'fecha',
+            'total',
+            'estado',
+            'tipo',
+            'cantidad_productos',
+            'productos',
+        ]
+
+    def get_cantidad_productos(self, obj):
+        return sum(detalle.cantidad for detalle in obj.detalles.all())
+
+
 class CrearVentaSerializer(serializers.Serializer):
     tipo = serializers.ChoiceField(choices=Venta.TIPO_CHOICES)
     estado = serializers.ChoiceField(choices=Venta.ESTADO_CHOICES, default='pendiente')

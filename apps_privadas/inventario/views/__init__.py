@@ -7,6 +7,7 @@ from apps_privadas.inventario.views.catalogo import CatalogoViewSet
 from apps_privadas.inventario.views.producto_detalle import ProductoDetalleViewSet
 from apps_privadas.inventario.views.producto_favorito import ProductoFavoritoViewSet
 from apps_privadas.inventario.views.resena import ResenaViewSet
+from apps_privadas.inventario.views.comparador import ComparadorViewSet
 
 __all__ = [
     'CategoriaViewSet',
@@ -18,4 +19,5 @@ __all__ = [
     'ProductoDetalleViewSet',
     'ProductoFavoritoViewSet',
     'ResenaViewSet',
+    'ComparadorViewSet',
 ]

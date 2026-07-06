@@ -33,6 +33,7 @@ from apps_privadas.inventario.serializers.resena import (
     CrearResenaSerializer,
     ActualizarResenaSerializer,
 )
+from apps_privadas.inventario.serializers.comparador import CompararProductosSerializer
 
 __all__ = [
     'CategoriaSerializer',
@@ -56,4 +57,5 @@ __all__ = [
     'ResenaSerializer',
     'CrearResenaSerializer',
     'ActualizarResenaSerializer',
+    'CompararProductosSerializer',
 ]
