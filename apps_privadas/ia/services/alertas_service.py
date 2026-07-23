@@ -1,5 +1,6 @@
 from apps_privadas.ia.models import AlertaReabastecimiento
 from apps_privadas.inventario.models import VarianteProducto
+from apps_privadas.ia.services.sugerencia_compra_service import generar_sugerencia_compra
 
 
 def verificar_stock_post_venta(variante):
@@ -18,12 +19,13 @@ def verificar_stock_post_venta(variante):
     ).exists()
 
     if not ya_existe:
-        AlertaReabastecimiento.objects.create(
+        alerta = AlertaReabastecimiento.objects.create(
             tipo='stock_bajo',
             variante=variante,
             stock_actual=variante.cantidad,
             limite_minimo=variante.limite_cantidad,
         )
+        generar_sugerencia_compra(alerta)
 
 
 def crear_alertas_demanda_alta(predicciones):
@@ -65,4 +67,6 @@ def crear_alertas_demanda_alta(predicciones):
         ))
 
     if nuevas:
-        AlertaReabastecimiento.objects.bulk_create(nuevas)
+        creadas = AlertaReabastecimiento.objects.bulk_create(nuevas)
+        for alerta in creadas:
+            generar_sugerencia_compra(alerta)
